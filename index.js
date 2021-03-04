@@ -34,9 +34,15 @@ var generic = [
     },
     {
         type: "checkbox",
-        message: "Does this employee hava a special role?",
-        choices: ["Engineer","Intern","Manager","no special role"],
+        message: "What is this employee's role?",
+        choices: ["Engineer","Intern"],
         name: "role"
+    },
+    {
+        type: "checkbox",
+        message:"Is this the last employee?",
+        choices:["Yes","No"],
+        name:"stop"
     }
 
 ]
@@ -48,30 +54,8 @@ function getEmployees(total){
           sofar++;
           var currentEmployee;
             //determine job, ask specific question, add to constructorInputs, make constructor
-            if(response.role=="Manager"){
-                inquirer
-                    .prompt({
-                        type: "number",
-                        message:"What Office Number do they have?",
-                        name:"team"
-                    })
-                    .then((answer)=>{
-                        currentEmployee = new Manager(response.name,response.id,response.email,answer.team)
-                        employeeList.push(currentEmployee);
-                        console.log("added "+response.name+" to the list")
-                        //add employee to list
-                        if (sofar < total) {
-                            // Ask the next question
-                            console.log("next employee "+sofar+" complete")
-                            askQuestion(); 
-                        }
-                        else{
-                            console.log("writing to file")
-                            writeStuff();
-                        }
-                    })
-            }
-            else if(response.role=="Intern"){
+           
+            if(response.role=="Intern"){
                 inquirer
                     .prompt({
                         type: "input",
@@ -83,7 +67,7 @@ function getEmployees(total){
                         employeeList.push(currentEmployee);
                         console.log("added "+response.name+" to the list")
                         //add employee to list
-                        if (sofar < total) {
+                        if (response.stop=="No") {
                             // Ask the next question
                             askQuestion(); 
                         }
@@ -105,7 +89,7 @@ function getEmployees(total){
                         employeeList.push(currentEmployee);
                         console.log("added "+response.name+" to the list")
                         //add employee to list
-                        if (sofar < total) {
+                        if (response.stop=="No") {
                             // Ask the next question
                             askQuestion(); 
                         }
@@ -114,20 +98,6 @@ function getEmployees(total){
                             writeStuff();
                         }
                     })
-            }
-            else{//employee
-                currentEmployee = new Employee(response.name, response.id, response.email)
-                employeeList.push(currentEmployee);
-                console.log("added "+response.name+" to the list")
-                //add employee to list
-                if (sofar < total) {
-                    // Ask the next question
-                    askQuestion(); 
-                }
-                else{
-                    console.log("writing to file")
-                    writeStuff();
-                }
             }
           
         })
@@ -151,22 +121,39 @@ function writeStuff(){
         );
 }
 
+var currentEmployee;
+            //determine job, ask specific question, add to constructorInputs, make constructor
 inquirer
     .prompt([
         {
-            type:"number",
-            message: "How many employees?",
-            name: "employees",
-        } 
-    ])
-    .then(function(answer){
-        
-        getEmployees(answer.employees);
-        
+            type: "input",
+            message:"What is the Manager's name",
+            name:"name"
+        },
+        {
+            type: "number",
+            message:"What is the Manager's ID",
+            name:"id"
+        },
+        {
+            type: "input",
+            message:"What is the Manager's email",
+            name:"email"
+        },{
+        type: "number",
+        message:"What Office Number do they have?",
+        name:"office"
+    } ])
+    .then((response)=>{
+        currentEmployee = new Manager(response.name,response.id,response.email,response.office)
+        employeeList.push(currentEmployee);
+        console.log("added "+response.name+" to the list")
+        //add employee to list
+        getEmployees();
+    })
 
-       
-
-    } )
+        
+ 
 
 
 
