@@ -50,38 +50,38 @@ function getEmployees(total){
             if(response.role=="Manager"){
                 inquirer
                     .prompt({
-                        type: "number"
-                        message:"What team is this manager on?"
+                        type: "number",
+                        message:"What team is this manager on?",
                         name:"team"
                     })
                     .then((answer)=>{
-
+                        currentEmployee = new Manager(response.name,response.id,response.email,answer.team)
                     })
             }
             else if(response.role=="Intern"){
                 inquirer
                     .prompt({
-                        type: "number"
-                        message:"What team is this manager on?"
+                        type: "input",
+                        message:"What college is this Intern from?",
                         name:"team"
                     })
                     .then((answer)=>{
-                        
+                        currentEmployee = new Intern(response.name,response.id,response.email,answer.team)
                     })
             }
             else if(response.role=="Engineer"){
                 inquirer
                     .prompt({
-                        type: "number"
-                        message:"What team is this manager on?"
+                        type: "input",
+                        message:"What it the Engineer's github?",
                         name:"team"
                     })
                     .then((answer)=>{
-                        
+                        currentEmployee = new Engineer(response.name,response.id,response.email,answer.team)
                     })
             }
             else{//employee
-
+                currentEmployee = new Employee(response.name, response.id, response.email)
             }
           employeeList.push(currentEmployee);
           //add employee to list
